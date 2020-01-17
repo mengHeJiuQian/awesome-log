@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"github.com/hpcloud/tail"
@@ -110,14 +109,19 @@ func (t *TailMgr) Process() {
 	logChan := GetLogConf()
 	for conf := range logChan {
 		logs.Debug("log conf :%v", conf)
-		var logConfArr []logConfig
-		err := json.Unmarshal([]byte(conf), &logConfArr)
-		if err != nil {
-			logs.Error("unmarshal failed,err:%v conf:%v", err, conf)
-			continue
+		var logConfArr = []logConfig {
+			{
+				Topic:    "awesome-log",
+				LogPath:  "./logs/logagent.log",
+		    },
 		}
+		//err := json.Unmarshal([]byte(conf), &logConfArr)
+		//if err != nil {
+		//	logs.Error("unmarshal failed,err:%v conf:%v", err, conf)
+		//	continue
+		//}
 		logs.Debug("unmarshal succ conf:%v", logConfArr)
-		err = t.reloadConfig(logConfArr)
+		err := t.reloadConfig(logConfArr)
 		if err != nil {
 			logs.Error("realod config from etcd failed err:%v", err)
 			continue

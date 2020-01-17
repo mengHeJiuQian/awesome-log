@@ -58,6 +58,9 @@ func initEtcd(addr []string, keyfmt string, timeout time.Duration) (err error) {
 
 		// 从etcd中获取要收集日志的信息
 		resp, err := Client.Get(ctx, key)
+
+		logs.Info("从etcd中取值:%v", resp.Kvs)
+
 		cancel()
 		if err != nil {
 			logs.Warn("get key %s failed,err:%v", key, err)
@@ -97,7 +100,6 @@ func WatchEtcd(keys []string) {
 			}
 		}
 		time.Sleep(time.Second)
-		break
 	}
 	waitGroup.Done()
 }
